@@ -5,6 +5,15 @@ c=psycopg2.connect(user="postgres",password="admin",port=5432,host="localhost",d
 c.autocommit=True
 conn=c.cursor()
 # conn.execute("create database users")
+# conn.execute('''
+# CREATE TABLE IF NOT EXISTS users (
+# id SERIAL PRIMARY KEY,
+# name TEXT,
+# username TEXT UNIQUE,
+# password TEXT,
+# mobile NUMERIC
+# )
+# ''')
 app = Flask(__name__)
 
 
@@ -21,7 +30,9 @@ def sample():
 
 @app.route('/viewmembers')
 def viewmembers():
-    return render_template('viewmembers.html')
+    conn.execute("SELECT * FROM users")
+    users=conn.fetchall()
+    return render_template('viewmembers.html',users=users)
 
 @app.route('/addmembers')
 def addmembers():
@@ -29,6 +40,7 @@ def addmembers():
 
 @app.route('/viewbooks')
 def viewbooks():
+
     return render_template('viewbooks.html')
 
 @app.route('/addbooks')
@@ -41,6 +53,6 @@ def signup():
         username = request.form['username']
         password = request.form['password']
         mobile = request.form['mobile']
-
-
+        conn.execute("insert into users (name,username,password,mobile) values (%s,%s,%s,%s)",(name,username,password,mobile))
+        return "User Added Successfully"
 app.run(debug=True)

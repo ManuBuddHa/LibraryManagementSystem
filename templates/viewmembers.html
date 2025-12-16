@@ -16,6 +16,15 @@
         <th>Edit</th>
         <th>Delete</th>
     </tr>
+    {% for user in users %}
+  <tr>
+      <td>{{user[2]}}</td>
+      <td>{{user[4]}}</td>
+      <td>{{user[1]}}</td>
+      <td><button class="btn btn-primary">Edit</button></td>
+      <td><button class="btn btn-danger">Delete</button></td>
+  </tr>
+    {% endfor %}
 </table>
 </div>
 
